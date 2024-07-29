@@ -1,4 +1,6 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <title>Jogo de Roleta</title>
 <style>
 body {
@@ -127,30 +129,67 @@ body {
 }
 .valorSaldo {
     width:20%;
-      text-align:center;
+    text-align:center;
     border-radius:10px;
 }
 .btnButton{
-      width:20%;
+    width:20%;
     border-radius:10px;
     text-align:center;
     margin-left:10%;
 }
 
 .saqueButton{
-      width:20%;
+    width:20%;
     border-radius:10px;
     text-align:center;
+    cursor: pointer;
+}
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 </style>
 </head>
 <body>
 <div class="circular">
     <div>
-        <input class="valorInput" id="valorInput" value="100" readoly>
+        <input class="valorInput" id="valorInput" value="100" readonly>
         <input class="valorSaldo" id="valorSaldo" value="0">
-  <button class="btnButton">DEPOSITO</button>
-  <button class="saqueButton">SAQUE</button>
+        <button class="btnButton">DEPOSITO</button>
+        <button class="saqueButton" onclick="mostrarModal()">SAQUE</button>
     </div><br>
     <div>
         <img src="https://raw.githubusercontent.com/Savanty/Time-/main/2.jpeg" class="bahia time" data-time="bahia">
@@ -184,7 +223,19 @@ body {
 </div>
 <div class="btn">
     <button class="inicia" onclick="iniciar()">Iniciar</button>
-    
+</div>
+
+<!-- Modal -->
+<div id="modalSaque" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="fecharModal()">&times;</span>
+        <h2>Saque</h2>
+        <p>Saldo acumulado: <span id="saldoModal"></span></p>
+        <p>Nome: <input type="text" id="nome" placeholder="Seu nome"></p>
+        <p>PIX: <input type="text" id="pix" placeholder="Chave PIX"></p>
+        <button onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
+    </div>
+</div>
 
 <script>
 let timeEscolhido = null;
@@ -250,6 +301,30 @@ function iniciar() {
         }
         ponteiro.style.transform = `rotate(${grausAtuais - 90}deg)`; // Ajusta para começar invertido
     }, 1000 / 60); // Atualiza 60 vezes por segundo
+}
+
+function mostrarModal() {
+    const saldo = document.getElementById("valorSaldo").value;
+    document.getElementById("saldoModal").innerText = saldo;
+    document.getElementById("modalSaque").style.display = "block";
+}
+
+function fecharModal() {
+    document.getElementById("modalSaque").style.display = "none";
+}
+
+function enviarWhatsApp() {
+    const saldo = document.getElementById("valorSaldo").value;
+    const nome = document.getElementById("nome").value;
+    const pix = document.getElementById("pix").value;
+    if (!nome || !pix) {
+        alert("Por favor, preencha seu nome e chave PIX.");
+        return;
+    }
+
+    const mensagem = `Saque solicitado:\n\nNome: ${nome}\nPIX: ${pix}\nSaldo: R$${saldo}`;
+    const url = `https://wa.me/?text=${encodeURIComponent(mensagem)}`;
+    window.open(url, '_blank');
 }
 </script>
 </body>
