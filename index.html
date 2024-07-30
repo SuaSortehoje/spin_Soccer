@@ -37,8 +37,8 @@
         border: 1px solid black;
         width: 100px;
         height: 10px;
-        margin-left: 50%;
-        margin-top: 45%;
+        margin-left: 51%;
+        margin-top: 49%;
         transform-origin: left center;
         transform: rotate(0deg); /* Ponteiro começa apontando para cima */
     }
@@ -53,6 +53,7 @@
         border-radius: 10px;
         margin-top: 5%;
         margin-left: 30%;
+        outline:none;
     }
     .dps { width: 40%; height: 30px; background: #00ff00; border-radius: 10px; margin-top: 10%; margin-left: 10%; }
     .escolhar { margin-top: 80px; margin-left: 5px; }
@@ -121,7 +122,7 @@
       <input class="valorSaldo" id="valorSaldo" value="0" readonly>
       <button class="btnButton">DEPOSITO</button>
       <button class="saqueButton" onclick="mostrarModal()">SAQUE</button>
-    </div><br>
+    </div>
     <div>
       <img src="https://raw.githubusercontent.com/Savanty/Time-/main/2.jpeg" class="bahia time" data-time="bahia">
     </div>
@@ -173,6 +174,23 @@
   <script>
     let timeEscolhido = null;
 
+    // Função para salvar valores no localStorage
+    function salvarValores(valor, saldo) {
+        localStorage.setItem('valor', valor);
+        localStorage.setItem('saldo', saldo);
+    }
+
+    // Função para carregar valores do localStorage
+    function carregarValores() {
+        const valor = localStorage.getItem('valor');
+        const saldo = localStorage.getItem('saldo');
+        if (valor !== null) document.getElementById('valorInput').value = valor;
+        if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
+    }
+
+    // Carregar valores ao iniciar
+    window.onload = carregarValores;
+
     document.querySelectorAll('.time').forEach(el => {
         el.addEventListener('click', function() {
             document.querySelectorAll('.time').forEach(img => img.classList.remove('selected'));
@@ -205,12 +223,12 @@
 
         // Defina os ângulos centrais para cada time
         const grausPorTime = {
-            "bahia": 390,  // Ajuste conforme necessário
-            "vitoria": 450,
+            "bahia": 395,  // Ajuste conforme necessário
+             "vitoria": 460,
             "gremio": 515,
-            "cruzeiro": 330,
-            "flamengo": 270,
-            "palmeiras": 200,
+            "cruzeiro": 335,
+            "flamengo": 280,
+            "palmeiras": 224,
         };
 
         const times = Object.keys(grausPorTime);
@@ -226,16 +244,19 @@
                 if (Math.abs(grausAtuais - grausFinal) < grausPorSeg) { // Verifica se a rotação está dentro da margem aceitável
                     if (randomTime === timeEscolhido) {
                         alert("Você ganhou!");
-                        saldo += 70;
+                        saldo += 50;
                     } else {
                         alert("Você perdeu! O ponteiro parou no time " + randomTime);
                         valor -= 5;
-                        if (saldo >= 35) {
+                        if (saldo >= 5) {
                             saldo -= 35;
                         }
                     }
                     valorInput.value = valor.toFixed(2); // Formata o valor com 2 casas decimais
                     valorSaldo.value = saldo.toFixed(2); // Formata o saldo com 2 casas decimais
+
+                    // Salva os valores no localStorage
+                    salvarValores(valor.toFixed(2), saldo.toFixed(2));
                 }
             }
             ponteiro.style.transform = `rotate(${grausAtuais % 360 - 90}deg)`; // Ajusta para começar invertido
