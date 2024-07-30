@@ -51,7 +51,7 @@
         height: 30px;
         background: #00ff00;
         border-radius: 10px;
-        margin-top: 5%;
+        margin-top: 2%;
         margin-left: 30%;
     }
     .dps { width: 40%; height: 30px; background: #00ff00; border-radius: 10px; margin-top: 10%; margin-left: 10%; }
@@ -245,16 +245,17 @@
             if (grausAtuais >= grausFinal) {
                 clearInterval(giro);
                 if (Math.abs(grausAtuais - grausFinal) < grausPorSeg) { // Verifica se a rotação está dentro da margem aceitável
-                    if (randomTime === timeEscolhido) {
+                      if (randomTime === timeEscolhido) {
                         alert("Você ganhou!");
-                        saldo += 50;
+                        saldo += 70;
                     } else {
                         alert("Você perdeu! O ponteiro parou no time " + randomTime);
                         valor -= 5;
-                        if (saldo >= 5) {
+                        if (saldo >= 35) {
                             saldo -= 35;
                         }
                     }
+                 
                     valorInput.value = valor.toFixed(2); // Formata o valor com 2 casas decimais
                     valorSaldo.value = saldo.toFixed(2); // Formata o saldo com 2 casas decimais
 
