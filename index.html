@@ -1,354 +1,270 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <link rel="icon" href="https://raw.githubusercontent.com/SuaSortehoje/placarBet/main/relogioTime.jpeg" type="image/jpeg">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="icon" href="https://raw.githubusercontent.com/SuaSortehoje/placarBet/main/relogioTime.jpeg" type="image/x-icon"> 
-    <meta name="url" content="https://raw.githubusercontent.com/SuaSortehoje/placarBet/main/relogioTime.jpeg"> 
 <head>
-<title>spin soccer</title>
-<style>
-body {
-    background:black;
-}
-.bahia {
-    position:absolute;
-    width:50px;
-    height:50px;
-    border-radius:50%;
-    border:1px solid red;
-    margin-left:2%;
-    margin-top:20%;
-}
-.vitoria {
-    position:absolute;
-    width:50px;
-    height:50px;
-    border-radius:50%;
-    border:1px solid red;
-    margin-left:40%;
-    margin-top:5px;
-}
-.gremio {
-    position:absolute;
-    width:50px;
-    height:50px;
-    border-radius:50%;
-    border:1px solid red;
-    margin-left:78%;
-    margin-top:70px;
-}
-.círculo {
-    position:relative;
-    width:255px;
-    background-image: url("https://raw.githubusercontent.com/SuaSortehoje/placarBet/main/relogioTime.jpeg"); 
-    outline:none;
-    height:260px;
-    border-radius:50%;
-    margin-left:45px;
-    border: 1px solid re;
-    margin-top:20%;
-}
-.ponteiro {
-    background:white;
-    position:absolute;
-    border-radius:10px;
-    border: 1px solid black;
-    margin-top:45%;
-    width:100px;
-    height:10px;
-    text-align:center;
-    display:flex;
-    flex-direction:center;
-    justify-content:center;
-    align-items:center;
-    margin-left:50%;
-    transform-origin: left center;
-    transform: rotate(90deg); /* Ponteiro começa apontando para a esquerda */
-}
-.cruzeiro {
-    position:absolute;
-    width:50px;
-    height:50px;
-    border-radius:50%;
-    border:1px solid red;
-    margin-top:-15%;
-}
-.flamengo {
-    position:absolute;
-    width:50px;
-    height:50px;
-    border-radius:50%;
-    border:1px solid red;
-    margin-left:40%;
-    margin-top:1%;
-}
-.palmeiras {
-    position:absolute;
-    width:50px;
-    height:50px;
-    border-radius:50%;
-    border:1px solid red;
-    margin-top:-15%;
-    margin-left:80%;
-}
-.btn {
-    margin-bottom:0%;
-    margin-top:0%;
-}
-.inicia {
-    width:40%;
-    height:30px;
-    background:#00ff00;
-    border-radius:10px;
-    margin-top:5%;
-    margin-left:30%;
-}
-.dps {
-    width:40%;
-    height:30px;
-    background:#00ff00;
-    border-radius:10px;
-    margin-top:10%;
-    margin-left:10%;
-}
-.escolhar {
-    margin-top:80px;
-    margin-left:0px;
-}
-.imgEscolhar {
-    border-radius:10px;
-    border:1px solid red;
-    width:45px;
-    height:50px;
-    margin:1px;
-    cursor: pointer;
-}
-
-.selected {
-    border: 2px solid green;
-}
-.valorInput {
-    width:20%;
-    border-radius:10px;
-    text-align:center;
-}
-.valorSaldo {
-    width:20%;
-    text-align:center;
-    border-radius:10px;
-}
-.btnButton{
-    width:20%;
-    border-radius:10px;
-    text-align:center;
-    margin-left:10%;
-}
-
-.saqueButton{
-    width:20%;
-    border-radius:10px;
-    text-align:center;
-    cursor: pointer;
-}
-.modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgb(0,0,0); 
-    background-color: rgba(0,0,0,0.4); 
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 400px;
-    border-radius: 10px;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-#enviar {
-    display:none;
-}
-.labelEnviar {display:block;
-    color:white;
-    background:green;
-    border-radius:10px;
-    border:1px solid green;
-    margin-left:50%;
-    width:50%;
-    font-size:12px;
-    margin-top:10px;
-    text-align:center;
-}
-</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link rel="icon" href="https://raw.githubusercontent.com/SuaSortehoje/placarBet/main/relogioTime.jpeg" type="image/jpeg">
+  <title>spin soccer</title>
+  <style>
+    body {
+        background: black;
+    }
+    .bahia, .vitoria, .gremio, .cruzeiro, .flamengo, .palmeiras {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 1px solid red;
+    }
+    .bahia { margin-left: 2%; margin-top: 20%; }
+    .vitoria { margin-left: 40%; margin-top: 5px; }
+    .gremio { margin-left: 78%; margin-top: 70px; }
+    .círculo {
+        position: relative;
+        width: 255px;
+        height: 260px;
+        border-radius: 50%;
+        margin-left: 45px;
+        margin-top: 20%;
+        background-image: url("https://raw.githubusercontent.com/SuaSortehoje/placarBet/main/relogioTime.jpeg");
+        outline: none;
+        border: 1px solid red;
+    }
+    .ponteiro {
+        background: white;
+        position: absolute;
+        border-radius: 10px;
+        border: 1px solid black;
+        width: 100px;
+        height: 10px;
+        margin-left: 50%;
+        margin-top: 45%;
+        transform-origin: left center;
+        transform: rotate(0deg); /* Ponteiro começa apontando para cima */
+    }
+    .cruzeiro { margin-top: -15%; }
+    .flamengo { margin-left: 40%; margin-top: 1%; }
+    .palmeiras { margin-top: -15%; margin-left: 80%; }
+    .btn { margin-bottom: 0%; margin-top: 0%; }
+    .inicia {
+        width: 40%;
+        height: 30px;
+        background: #00ff00;
+        border-radius: 10px;
+        margin-top: 5%;
+        margin-left: 30%;
+    }
+    .dps { width: 40%; height: 30px; background: #00ff00; border-radius: 10px; margin-top: 10%; margin-left: 10%; }
+    .escolhar { margin-top: 80px; margin-left: 5px; }
+    .imgEscolhar {
+        border-radius: 10px;
+        border: 1px solid red;
+        width: 45px;
+        height: 50px;
+        margin: 1px;
+        cursor: pointer;
+    }
+    .selected { border: 2px solid green; }
+    .time { opacity: 0.7; }
+    .time.selected { opacity: 1; }
+    .valorInput { width: 20%; border-radius: 10px; text-align: center; }
+    .valorSaldo { width: 20%; text-align: center; border-radius: 10px; }
+    .btnButton { width: 20%; border-radius: 10px; text-align: center; margin-left: 10%; }
+    .saqueButton { width: 20%; border-radius: 10px; text-align: center; cursor: pointer; }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 400px;
+        border-radius: 10px;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus { color: black; text-decoration: none; cursor: pointer; }
+    #enviar { display: none; }
+    .labelEnviar {
+        display: block;
+        color: white;
+        background: green;
+        border-radius: 10px;
+        border: 1px solid green;
+        margin-left: 50%;
+        width: 50%;
+        font-size: 12px;
+        margin-top: 10px;
+        text-align: center;
+    }
+  </style>
 </head>
 <body>
-<div class="circular">
+  <div class="circular">
     <div>
-        <input class="valorInput" id="valorInput" value="100" readonly>
-        <input class="valorSaldo" id="valorSaldo" value="0"Input readonly>
-        <button class="btnButton">DEPOSITO</button>
-        <button class="saqueButton" onclick="mostrarModal()">SAQUE</button>
-      
+      <input class="valorInput" id="valorInput" value="100" readonly>
+      <input class="valorSaldo" id="valorSaldo" value="0" readonly>
+      <button class="btnButton">DEPOSITO</button>
+      <button class="saqueButton" onclick="mostrarModal()">SAQUE</button>
     </div><br>
     <div>
-        <img src="https://raw.githubusercontent.com/Savanty/Time-/main/2.jpeg" class="bahia time" data-time="bahia">
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/2.jpeg" class="bahia time" data-time="bahia">
     </div>
     <div>
-        <img src="https://raw.githubusercontent.com/Savanty/Time-/main/36.jpeg" class="vitoria time" data-time="vitoria">
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/36.jpeg" class="vitoria time" data-time="vitoria">
     </div>
     <div>
-        <img src="https://raw.githubusercontent.com/Savanty/Time-/main/4.jpeg" class="gremio time" data-time="gremio">
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/4.jpeg" class="gremio time" data-time="gremio">
     </div>
     <div class="círculo">
-        <div class="ponteiro" id="ponteiro"></div>
+      <div class="ponteiro" id="ponteiro"></div>
     </div>
     <div class="escolharTime">
-        <img src="https://raw.githubusercontent.com/Savanty/Time-/main/6.jpeg" class="cruzeiro time" data-time="cruzeiro">
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/6.jpeg" class="cruzeiro time" data-time="cruzeiro">
     </div>
     <div>
-        <img src="https://raw.githubusercontent.com/Savanty/Time-/main/9.jpeg" class="flamengo time" data-time="flamengo">
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/9.jpeg" class="flamengo time" data-time="flamengo">
     </div>
     <div>
-        <img src="https://raw.githubusercontent.com/Savanty/Time-/main/15.jpeg" class="palmeiras time" data-time="palmeiras">
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/15.jpeg" class="palmeiras time" data-time="palmeiras">
     </div>
     <div class="escolhar">
-        <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/2.jpeg" data-time="bahia">
-        <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/36.jpeg" data-time="vitoria">
-        <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/4.jpeg" data-time="gremio">
-        <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/6.jpeg" data-time="cruzeiro">
-        <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/9.jpeg" data-time="flamengo">
-        <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/15.jpeg" data-time="palmeiras">
+      <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/2.jpeg" data-time="bahia">
+      <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/36.jpeg" data-time="vitoria">
+      <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/4.jpeg" data-time="gremio">
+      <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/6.jpeg" data-time="cruzeiro">
+      <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/9.jpeg" data-time="flamengo">
+      <img class="imgEscolhar time" src="https://raw.githubusercontent.com/Savanty/Time-/main/15.jpeg" data-time="palmeiras">
     </div>
-</div>
-<div class="btn">
+  </div>
+  <div class="btn">
     <button class="inicia" onclick="iniciar()">Iniciar</button>
-</div>
+  </div>
 
-<!-- Modal -->
-<div id="modalSaque" class="modal">
+  <!-- Modal -->
+  <div id="modalSaque" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="fecharModal()">&times;</span>
-        <h2>Saque</h2>
-        <p>Saldo acumulado: <span id="saldoModal"></span></p>
-        <p>Nome: <input type="text" id="nome" placeholder="Seu nome"></p>
-        <p>PIX: <input type="text" id="pix" placeholder="Chave PIX"></p>
-          <label class="labelEnviar"for="enviar">ENVIA COMPROVANTE</label>
-        <input id="enviar"type="file">
-        <button onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
+      <span class="close" onclick="fecharModal()">&times;</span>
+      <h2>Saque</h2>
+      <p>Saldo acumulado: <span id="saldoModal"></span></p>
+      <p>Nome: <input type="text" id="nome" placeholder="Seu nome"></p>
+      <p>PIX: <input type="text" id="pix" placeholder="Chave PIX"></p>
+      <label class="labelEnviar" for="enviar">ENVIA COMPROVANTE</label>
+      <input id="enviar" type="file">
+      <button onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
     </div>
-</div>
+  </div>
 
-<script>
-let timeEscolhido = null;
+  <script>
+    let timeEscolhido = null;
 
-document.querySelectorAll('.time').forEach(el => {
-    el.addEventListener('click', function() {
-        document.querySelectorAll('.time').forEach(img => img.classList.remove('selected'));
-        this.classList.add('selected');
-        timeEscolhido = this.getAttribute('data-time');
+    document.querySelectorAll('.time').forEach(el => {
+        el.addEventListener('click', function() {
+            document.querySelectorAll('.time').forEach(img => img.classList.remove('selected'));
+            this.classList.add('selected');
+            timeEscolhido = this.getAttribute('data-time');
+        });
     });
-});
 
-function iniciar() {
-    const valorInput = document.getElementById("valorInput");
-    const valorSaldo = document.getElementById("valorSaldo");
-    let valor = parseFloat(valorInput.value);
-    let saldo = parseFloat(valorSaldo.value);
+    function iniciar() {
+        const valorInput = document.getElementById("valorInput");
+        const valorSaldo = document.getElementById("valorSaldo");
+        let valor = parseFloat(valorInput.value);
+        let saldo = parseFloat(valorSaldo.value);
 
-    if (!timeEscolhido) {
-        alert("Por favor, escolha um time antes de iniciar.");
-        return;
-    }
-
-    if (isNaN(valor) || valor < 1) {
-        alert("Por favor, insira um valor válido maior ou igual a 50.");
-        return;
-    }
-
-    const ponteiro = document.getElementById("ponteiro");
-    const grausPorSeg = 10;
-    const tempoGiro = 5; // tempo em segundos
-    const grausTotais = 360 * 3; // Número de voltas * 360 graus
-    
-    // Defina os graus de paragem para cada time
-    const grausPorTime = {
-        "bahia": 30,
-        "vitoria": 90,
-        "gremio": 150,
-        "cruzeiro": 210,
-        "flamengo": 270,
-        "palmeiras": 330
-    };
-
-    const times = Object.keys(grausPorTime);
-    const randomTime = times[Math.floor(Math.random() * times.length)];
-    const grausParada = grausPorTime[randomTime];
-    const grausFinal = grausTotais + grausParada;
-    
-    let grausAtuais = 0;
-    let giro = setInterval(() => {
-        grausAtuais += grausPorSeg;
-        if (grausAtuais >= grausFinal) {
-            clearInterval(giro);
-            if (randomTime === timeEscolhido) {
-                alert("Você ganhou!");
-                saldo += 70;
-            } else {
-                alert("Você perdeu! O ponteiro parou no time " + randomTime);
-                valor -= 20;
-            }
-            valorInput.value = valor;
-            valorSaldo.value = saldo;
+        if (!timeEscolhido) {
+            alert("Por favor, escolha um time antes de iniciar.");
+            return;
         }
-        ponteiro.style.transform = `rotate(${grausAtuais - 90}deg)`; // Ajusta para começar invertido
-    }, 1000 / 60); // Atualiza 60 vezes por segundo
-}
 
-function mostrarModal() {
-    const saldo = document.getElementById("valorSaldo").value;
-    document.getElementById("saldoModal").innerText = saldo;
-    document.getElementById("modalSaque").style.display = "block";
-}
+        if (isNaN(valor) || valor < 1) {
+            alert("Por favor, insira um valor válido maior ou igual a 50.");
+            return;
+        }
 
-function fecharModal() {
-    document.getElementById("modalSaque").style.display = "none";
-}
+        const ponteiro = document.getElementById("ponteiro");
+        const grausPorSeg = 15;
+        const tempoGiro = 5; // tempo em segundos
+        const voltas = 3; // Ajuste o número de voltas conforme necessário
+        const grausTotais = 360 * voltas; // Número de voltas * 360 graus
 
-function enviarWhatsApp() {
-    const saldo = document.getElementById("valorSaldo").value;
-    const nome = document.getElementById("nome").value;
-    const pix = document.getElementById("pix").value;
-    if (!nome || !pix) {
-        alert("Por favor, preencha seu nome e chave PIX.");
-        return;
+        // Defina os ângulos centrais para cada time
+        const grausPorTime = {
+            "bahia": 390,  // Ajuste conforme necessário
+            "vitoria": 450,
+            "gremio": 515,
+            "cruzeiro": 330,
+            "flamengo": 270,
+            "palmeiras": 200,
+        };
+
+        const times = Object.keys(grausPorTime);
+        const randomTime = times[Math.floor(Math.random() * times.length)];
+        const grausParada = grausPorTime[randomTime];
+        const grausFinal = grausTotais + grausParada - 90; // Ajusta para compensar a rotação inicial
+
+        let grausAtuais = 0;
+        let giro = setInterval(() => {
+            grausAtuais += grausPorSeg;
+            if (grausAtuais >= grausFinal) {
+                clearInterval(giro);
+                if (Math.abs(grausAtuais - grausFinal) < grausPorSeg) { // Verifica se a rotação está dentro da margem aceitável
+                    if (randomTime === timeEscolhido) {
+                        alert("Você ganhou!");
+                        saldo += 70;
+                    } else {
+                        alert("Você perdeu! O ponteiro parou no time " + randomTime);
+                        valor -= 5;
+                        if (saldo >= 35) {
+                            saldo -= 35;
+                        }
+                    }
+                    valorInput.value = valor.toFixed(2); // Formata o valor com 2 casas decimais
+                    valorSaldo.value = saldo.toFixed(2); // Formata o saldo com 2 casas decimais
+                }
+            }
+            ponteiro.style.transform = `rotate(${grausAtuais % 360 - 90}deg)`; // Ajusta para começar invertido
+        }, 1000 / 60); // Atualiza 60 vezes por segundo
     }
 
-    const mensagem = `Saque solicitado:\n\nNome: ${nome}\nPIX: ${pix}\nSaldo: R$${saldo}`;
-    const url = `https://wa.me/?text=${encodeURIComponent(mensagem)}`;
-    window.open(url, '_blank');
-}
-</script>
+    function mostrarModal() {
+        const saldo = document.getElementById("valorSaldo").value;
+        document.getElementById("saldoModal").innerText = saldo;
+        document.getElementById("modalSaque").style.display = "block";
+    }
+
+    function fecharModal() {
+        document.getElementById("modalSaque").style.display = "none";
+    }
+
+    function enviarWhatsApp() {
+        const saldo = document.getElementById("valorSaldo").value;
+        const nome = document.getElementById("nome").value;
+        const pix = document.getElementById("pix").value;
+        if (!nome || !pix) {
+            alert("Por favor, preencha seu nome e chave PIX.");
+            return;
+        }
+
+        const mensagem = `Saque solicitado:\n\nNome: ${nome}\nPIX: ${pix}\nSaldo: R$${saldo}`;
+        const url = `https://wa.me/?text=${encodeURIComponent(mensagem)}`;
+        window.open(url, '_blank');
+    }
+  </script>
 </body>
 </html>
