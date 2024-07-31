@@ -111,22 +111,39 @@
         border-radius: 10px;
         border: 1px solid green;
         margin-left: 20%;
-        
         width: 50%;
         font-size: 14px;
         margin-top: 10px;
         text-align: center;
     }
+    
+    @keyframes blink {
+    0% { opacity: 1; }
+    10% {background:blue;}
+    11%{background:white;}
+    50% { opacity: 0; }
+    55%{background:green;}
+    51%{background:black;}
+    100% { opacity: 1; }
+}
+
+.blink {
+    animation: blink 1s infinite;
+}
+.addSaldoButton{
+    margin:8px ; background:pink;margin-left:220px;border-radius: 10px; text-align: center; cursor: pointer;
+}
   </style>
 </head>
 <body>
   <div class="circular">
     <div>
-      <input class="valorInput" id="valorInput" value="10" readonly>
+      <input class="valorInput" id="valorInput" value="200" readonly>
       <input class="valorSaldo" id="valorSaldo" value="0" readonly>
       <a href="https://multijogo.github.io/Link-de-pagamento-pix/">
       <button class="btnButton">DEPOSITO</button></a>
       <button class="saqueButton" onclick="mostrarModal()">SAQUE</button>
+          <button class="addSaldoButton" onclick="adicionarSaldo()">transferi☞☜</button>
     </div>
     <div>
       <img src="https://raw.githubusercontent.com/Savanty/Time-/main/2.jpeg" class="bahia time" data-time="bahia">
@@ -255,70 +272,92 @@
         });
     });
 
-    function iniciar() {
-        const valorInput = document.getElementById("valorInput");
-        const valorSaldo = document.getElementById("valorSaldo");
-        let valor = parseFloat(valorInput.value);
-        let saldo = parseFloat(valorSaldo.value);
+    function carregarValores() {
+    const valor = localStorage.getItem('valor');
+    const saldo = localStorage.getItem('saldo');
+    if (valor !== null) document.getElementById('valorInput').value = valor;
+    if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
 
-        if (!timeEscolhido) {
-            alert("Por favor, escolha um time antes de iniciar.");
-            return;
-        }
+    const saldoFloat = parseFloat(saldo);
+    const depositoBtn = document.querySelector('.btnButton');
+    if (isNaN(saldoFloat) || saldoFloat === 0) {
+        depositoBtn.classList.add('blink');
+    } else {
+        depositoBtn.classList.remove('blink');
+    }
+}
 
-        if (isNaN(valor) || valor < 1) {
-            alert("Por favor, insira um valor válido maior ou igual a 10.");
-            return;
-        }
+function iniciar() {
+    const valorInput = document.getElementById("valorInput");
+    const valorSaldo = document.getElementById("valorSaldo");
+    let valor = parseFloat(valorInput.value);
+    let saldo = parseFloat(valorSaldo.value);
 
-        const ponteiro = document.getElementById("ponteiro");
-        const grausPorSeg = 15;
-        const tempoGiro = 5; // tempo em segundos
-        const voltas = 3; // Ajuste o número de voltas conforme necessário
-        const grausTotais = 360 * voltas; // Número de voltas * 360 graus
+    if (!timeEscolhido) {
+        alert("Por favor, escolha um time antes de iniciar.");
+        return;
+    }
 
-        // Defina os ângulos centrais para cada time
-        const grausPorTime = {
-            "bahia": 395,  // Ajuste conforme necessário
-             "vitoria": 460,
-            "gremio": 515,
-            "cruzeiro": 335,
-            "flamengo": 280,
-            "palmeiras": 224,
-        };
+    if (isNaN(valor) || valor < 1) {
+        alert("Por favor, insira um valor válido maior ou igual a 10.");
+        return;
+    }
 
-        const times = Object.keys(grausPorTime);
-        const randomTime = times[Math.floor(Math.random() * times.length)];
-        const grausParada = grausPorTime[randomTime];
-        const grausFinal = grausTotais + grausParada - 90; // Ajusta para compensar a rotação inicial
+    const ponteiro = document.getElementById("ponteiro");
+    const grausPorSeg = 15;
+    const tempoGiro = 5; // tempo em segundos
+    const voltas = 3; // Ajuste o número de voltas conforme necessário
+    const grausTotais = 360 * voltas; // Número de voltas * 360 graus
 
-        let grausAtuais = 0;
-        let giro = setInterval(() => {
-            grausAtuais += grausPorSeg;
-            if (grausAtuais >= grausFinal) {
-                clearInterval(giro);
-                if (Math.abs(grausAtuais - grausFinal) < grausPorSeg) { // Verifica se a rotação está dentro da margem aceitável
-                      if (randomTime === timeEscolhido) {
-                        alert("Você ganhou!");
-                        saldo += 35;
-                    } else {
-                        alert("Você perdeu! O ponteiro parou no time " + randomTime);
-                        valor -= 2;
-                        if (saldo >= 35) {
-                            saldo -= 35;
-                        }
+    const grausPorTime = {
+        "bahia": 395,  // Ajuste conforme necessário
+        "vitoria": 460,
+        "gremio": 515,
+        "cruzeiro": 335,
+        "flamengo": 280,
+        "palmeiras": 224,
+    };
+
+    const times = Object.keys(grausPorTime);
+    const randomTime = times[Math.floor(Math.random() * times.length)];
+    const grausParada = grausPorTime[randomTime];
+    const grausFinal = grausTotais + grausParada - 90; // Ajusta para compensar a rotação inicial
+
+    let grausAtuais = 0;
+    let giro = setInterval(() => {
+        grausAtuais += grausPorSeg;
+        if (grausAtuais >= grausFinal) {
+            clearInterval(giro);
+            if (Math.abs(grausAtuais - grausFinal) < grausPorSeg) { // Verifica se a rotação está dentro da margem aceitável
+                if (randomTime === timeEscolhido) {
+                    alert("Você ganhou!");
+                    saldo += 35;
+                } else {
+                    alert("Você perdeu! O ponteiro parou no time " + randomTime);
+                    valor -= 2;
+                    if (saldo >= 35) {
+                        saldo -= 35;
                     }
-                 
-                    valorInput.value = valor.toFixed(2); // Formata o valor com 2 casas decimais
-                    valorSaldo.value = saldo.toFixed(2); // Formata o saldo com 2 casas decimais
+                }
 
-                    // Salva os valores no localStorage
-                    salvarValores(valor.toFixed(2), saldo.toFixed(2));
+                valorInput.value = valor.toFixed(2); // Formata o valor com 2 casas decimais
+                valorSaldo.value = saldo.toFixed(2); // Formata o saldo com 2 casas decimais
+
+                // Salva os valores no localStorage
+                salvarValores(valor.toFixed(2), saldo.toFixed(2));
+
+                // Atualiza o estado do botão de depósito
+                const depositoBtn = document.querySelector('.btnButton');
+                if (saldo === 0) {
+                    depositoBtn.classList.add('blink');
+                } else {
+                    depositoBtn.classList.remove('blink');
                 }
             }
-            ponteiro.style.transform = `rotate(${grausAtuais % 360 - 90}deg)`; // Ajusta para começar invertido
-        }, 1000 / 60); // Atualiza 60 vezes por segundo
-    }
+        }
+        ponteiro.style.transform = `rotate(${grausAtuais % 360 - 90}deg)`; // Ajusta para começar invertido
+    }, 1000 / 60); // Atualiza 60 vezes por segundo
+}
 
     function mostrarModal() {
     const saldo = parseFloat(document.getElementById("valorSaldo").value);
@@ -336,26 +375,31 @@
     }
 
     function enviarWhatsApp() {
-    const saldo = document.getElementById("valorSaldo").value;
-    const valor = document.getElementById("valorInput").value;
+    const saldo = parseFloat(document.getElementById("valorSaldo").value);
+    const valor = parseFloat(document.getElementById("valorInput").value);
     const nome = document.getElementById("nome").value;
     const pix = document.getElementById("pix").value;
+
     if (!nome || !pix) {
         alert("Por favor, preencha seu nome e chave PIX.");
         return;
     }
 
-    const mensagem = `Saque solicitado:\n\nNome: ${nome}\nPIX: ${pix}\nSaldo: R$${saldo}\nValor solicitado: R$${valor}`;
-    const url = `https://wa.me/5571992290058?text=${encodeURIComponent(mensagem)}`;
-    window.open(url, '_blank');
-    
     // Gerar e baixar o comprovante
     gerarComprovante(nome, pix, saldo);
+
+    // Enviar a mensagem via WhatsApp
+    const mensagem = `Saque solicitado:\n\nNome: ${nome}\nPIX: ${pix}\nSaldo solicitado: R$${saldo}\nValor Disponível: R$${valor}`;
+    const url = `https://wa.me/5571992290058?text=${encodeURIComponent(mensagem)}`;
+    window.open(url, '_blank');
+
+    // Atualizar o saldo e valor após a geração do comprovante e abertura do WhatsApp
+    document.getElementById("valorSaldo").value = "0.00";
+    localStorage.setItem('saldo', "0.00"); // Zera o saldo no localStorage
 }
 
-    //localStorage.clear();
-    //localStorage.removeItem('valorSaldo');
-function mostrarModal() {
+
+  function mostrarModal() {
     const saldo = parseFloat(document.getElementById("valorSaldo").value);
     if (saldo === 0) {
         alert("Saldo insuficiente para realizar o saque.");
@@ -399,10 +443,10 @@ function gerarComprovante(nome, pix, saldo) {
     ctx.fillText("SOLICITACAO de SAQUE", 100, 30);
     ctx.fillText(`Nome: ${nome}`, 10, 60);
     ctx.fillText(`PIX: ${pix}`, 10, 90);
-    ctx.fillText(`Saldo: R$${saldo}`, 10, 120);
+    ctx.fillText(`Saldo solicitado: R$${saldo}`, 10, 120);
 
     // Adicionar valor solicitado
-    ctx.fillText(`Valor solicitado: R$${parseFloat(document.getElementById("valorInput").value).toFixed(2)}`, 10, 150);
+    ctx.fillText(`Valor Disponivel : R$${parseFloat(document.getElementById("valorInput").value).toFixed(2)}`, 10, 150);
 
     // Adicionar data e hora
     const now = new Date();
@@ -412,12 +456,12 @@ function gerarComprovante(nome, pix, saldo) {
     // Adicionar marca d'água
     ctx.save();
     ctx.globalAlpha = 0.3; // Define a transparência da marca d'água
-    ctx.font = "bold 30px Arial";
+    ctx.font = "bold 120px Arial";
     ctx.fillStyle = "white"; // Cor da marca d'água
-    ctx.textAlign = "right";
+    ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.translate(canvas.width / 2, canvas.height / 2);
-    ctx.rotate(-Math.PI / 10); // Rotaciona a marca d'água
+    ctx.rotate(-Math.PI / 0); // Rotaciona a marca d'água
     ctx.fillText("SPIN SOCCER", 2, 0);
     
     ctx.restore();
@@ -428,6 +472,54 @@ function gerarComprovante(nome, pix, saldo) {
     link.href = canvas.toDataURL("image/png");
     link.click();
 }
+function carregarValores() {
+    const valor = localStorage.getItem('valor');
+    const saldo = localStorage.getItem('saldo');
+    if (valor !== null) document.getElementById('valorInput').value = valor;
+    if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
+
+    const saldoFloat = parseFloat(saldo);
+    if (isNaN(saldoFloat) || saldoFloat === 0) {
+        document.querySelector('.btnButton').classList.add('blink');
+    } else {
+        document.querySelector('.btnButton').classList.remove('blink');
+    }
+}
+function adicionarSaldo() {
+        const valorInput = document.getElementById('valorInput');
+        const valorSaldo = document.getElementById('valorSaldo');
+        
+        let valor = parseFloat(valorInput.value);
+        let saldo = parseFloat(valorSaldo.value);
+        
+        if (isNaN(valor) || isNaN(saldo)) {
+            alert("Valores inválidos.");
+            return;
+        }
+
+        // Adiciona o saldo ao valor
+        valor += saldo;
+        saldo = 0; // Zera o saldo após a transferência
+
+        // Atualiza os campos de valor e saldo
+        valorInput.value = valor.toFixed(2);
+        valorSaldo.value = saldo.toFixed(2);
+
+        // Salva os novos valores no localStorage
+        salvarValores(valor.toFixed(2), saldo.toFixed(2));
+
+        // Atualiza o estado do botão de depósito
+        const depositoBtn = document.querySelector('.btnButton');
+        if (saldo === 0) {
+            depositoBtn.classList.add('blink');
+        } else {
+            depositoBtn.classList.remove('blink');
+        }
+    }
+    
+
+  //localStorage.clear();
+    //localStorage.removeItem('valorSaldo');
 
   </script>
 </body>
