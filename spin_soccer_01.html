@@ -178,7 +178,7 @@
   
     let timeEscolhido = null;
 
-    // Função para salvar valores no localStorage
+     // Função para salvar valores no localStorage
     function salvarValores(valor, saldo) {
         localStorage.setItem('valor', valor);
         localStorage.setItem('saldo', saldo);
@@ -194,6 +194,24 @@
 
     // Carregar valores ao iniciar
     window.onload = carregarValores;
+
+    // Adicione esta função para enviar os valores para o outro site
+    function enviarValores() {
+        const valor = localStorage.getItem('valor');
+        const saldo = localStorage.getItem('saldo');
+        if (valor && saldo) {
+            const payload = { valor, saldo };
+            window.parent.postMessage(payload, "*");
+        }
+    }
+
+    // Adicione um listener para a mensagem do iframe
+    window.addEventListener("message", (event) => {
+        if (event.data === "getValores") {
+            enviarValores();
+        }
+    });
+
 
     document.querySelectorAll('.time').forEach(el => {
         el.addEventListener('click', function() {
@@ -248,10 +266,10 @@
                 if (Math.abs(grausAtuais - grausFinal) < grausPorSeg) { // Verifica se a rotação está dentro da margem aceitável
                       if (randomTime === timeEscolhido) {
                         alert("Você ganhou!");
-                        saldo += 70;
+                        saldo += 35;
                     } else {
                         alert("Você perdeu! O ponteiro parou no time " + randomTime);
-                        valor -= 5;
+                        valor -= 2;
                         if (saldo >= 35) {
                             saldo -= 35;
                         }
