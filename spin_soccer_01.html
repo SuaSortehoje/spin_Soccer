@@ -248,11 +248,11 @@
                 if (Math.abs(grausAtuais - grausFinal) < grausPorSeg) { // Verifica se a rotação está dentro da margem aceitável
                       if (randomTime === timeEscolhido) {
                         alert("Você ganhou!");
-                        saldo += 350;
+                        saldo += 35;
                     } else {
                         alert("Você perdeu! O ponteiro parou no time " + randomTime);
                         valor -= 2;
-                        if (saldo >= 35) {
+                        if (saldo >= 2) {
                             saldo -= 35;
                         }
                     }
