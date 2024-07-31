@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+<canvas id="receiptCanvas" style="display:none;"></canvas>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <link rel="icon" href="https://raw.githubusercontent.com/SuaSortehoje/placarBet/main/relogioTime.jpeg" type="image/jpeg">
@@ -168,9 +170,10 @@
       <p>Saldo acumulado: <span id="saldoModal"></span></p>
       <p>Nome: <input type="text" id="nome" placeholder="Seu nome"></p>
       <p>PIX: <input type="text" id="pix" placeholder="Chave PIX"></p>
-      <label class="labelEnviar" for="enviar">ENVIA COMPROVANTE</label>
+ 
       <input id="enviar" type="file"><br />
-      <button onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
+   <button onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
+
     </div>
   </div>
   <script>
@@ -264,7 +267,7 @@
         }
 
         if (isNaN(valor) || valor < 1) {
-            alert("Por favor, insira um valor válido maior ou igual a 50.");
+            alert("Por favor, insira um valor válido maior ou igual a 10.");
             return;
         }
 
@@ -333,20 +336,98 @@
     }
 
     function enviarWhatsApp() {
-        const saldo = document.getElementById("valorSaldo").value;
-        const nome = document.getElementById("nome").value;
-        const pix = document.getElementById("pix").value;
-        if (!nome || !pix) {
-            alert("Por favor, preencha seu nome e chave PIX.");
-            return;
-        }
-
-        const mensagem = `Saque solicitado:\n\nNome: ${nome}\nPIX: ${pix}\nSaldo: R$${saldo}`;
-        const url = `https://wa.me/?text=${encodeURIComponent(mensagem)}`;
-        window.open(url, '_blank');
+    const saldo = document.getElementById("valorSaldo").value;
+    const valor = document.getElementById("valorInput").value;
+    const nome = document.getElementById("nome").value;
+    const pix = document.getElementById("pix").value;
+    if (!nome || !pix) {
+        alert("Por favor, preencha seu nome e chave PIX.");
+        return;
     }
+
+    const mensagem = `Saque solicitado:\n\nNome: ${nome}\nPIX: ${pix}\nSaldo: R$${saldo}\nValor solicitado: R$${valor}`;
+    const url = `https://wa.me/5571992290058?text=${encodeURIComponent(mensagem)}`;
+    window.open(url, '_blank');
+    
+    // Gerar e baixar o comprovante
+    gerarComprovante(nome, pix, saldo);
+}
+
     //localStorage.clear();
     //localStorage.removeItem('valorSaldo');
+function mostrarModal() {
+    const saldo = parseFloat(document.getElementById("valorSaldo").value);
+    if (saldo === 0) {
+        alert("Saldo insuficiente para realizar o saque.");
+        return;
+    }
+    document.getElementById("saldoModal").innerText = saldo.toFixed(2);
+    document.getElementById("modalSaque").style.display = "block";
+}
+
+function fecharModal() {
+    document.getElementById("modalSaque").style.display = "none";
+}
+
+function gerarComprovante(nome, pix, saldo) {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    // Configurações do canvas
+    canvas.width = 500;
+    canvas.height = 300;
+
+    // Gera uma cor de fundo aleatória
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    const backgroundColor = getRandomColor();
+
+    // Preencher fundo com cor aleatória
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Adicionar texto
+    ctx.fillStyle = "#000";
+    ctx.font = "16px Arial";
+    ctx.fillText("SOLICITACAO de SAQUE", 100, 30);
+    ctx.fillText(`Nome: ${nome}`, 10, 60);
+    ctx.fillText(`PIX: ${pix}`, 10, 90);
+    ctx.fillText(`Saldo: R$${saldo}`, 10, 120);
+
+    // Adicionar valor solicitado
+    ctx.fillText(`Valor solicitado: R$${parseFloat(document.getElementById("valorInput").value).toFixed(2)}`, 10, 150);
+
+    // Adicionar data e hora
+    const now = new Date();
+    ctx.fillText(`Data: ${now.toLocaleDateString()}`, 10, 180);
+    ctx.fillText(`Hora: ${now.toLocaleTimeString()}`, 10, 210);
+
+    // Adicionar marca d'água
+    ctx.save();
+    ctx.globalAlpha = 0.3; // Define a transparência da marca d'água
+    ctx.font = "bold 30px Arial";
+    ctx.fillStyle = "white"; // Cor da marca d'água
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate(-Math.PI / 10); // Rotaciona a marca d'água
+    ctx.fillText("SPIN SOCCER", 2, 0);
+    
+    ctx.restore();
+
+    // Criar link para download
+    const link = document.createElement("a");
+    link.download = `comprovante_${now.getTime()}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+}
 
   </script>
 </body>
