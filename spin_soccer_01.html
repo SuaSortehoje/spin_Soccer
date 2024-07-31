@@ -120,7 +120,7 @@
 <body>
   <div class="circular">
     <div>
-      <input class="valorInput" id="valorInput" value="100" readonly>
+      <input class="valorInput" id="valorInput" value="10" readonly>
       <input class="valorSaldo" id="valorSaldo" value="0" readonly>
       <a href="https://multijogo.github.io/Link-de-pagamento-pix/">
       <button class="btnButton">DEPOSITO</button></a>
@@ -175,6 +175,7 @@
   </div>
 
   <script>
+  
     let timeEscolhido = null;
 
     // Função para salvar valores no localStorage
@@ -268,10 +269,15 @@
     }
 
     function mostrarModal() {
-        const saldo = document.getElementById("valorSaldo").value;
-        document.getElementById("saldoModal").innerText = saldo;
-        document.getElementById("modalSaque").style.display = "block";
+    const saldo = parseFloat(document.getElementById("valorSaldo").value);
+    if (saldo === 0) {
+        alert("Saldo insuficiente para realizar o saque.");
+        return;
     }
+    document.getElementById("saldoModal").innerText = saldo.toFixed(2);
+    document.getElementById("modalSaque").style.display = "block";
+}
+
 
     function fecharModal() {
         document.getElementById("modalSaque").style.display = "none";
@@ -297,3 +303,4 @@
   </script>
 </body>
 </html>
+ 
