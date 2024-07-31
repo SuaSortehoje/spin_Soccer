@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <link rel="icon" href="https://raw.githubusercontent.com/SuaSortehoje/placarBet/main/relogioTime.jpeg" type="image/jpeg">
   <title>spin soccer</title>
-  <style>
+    <style>
     body {
         background: black;
     }
@@ -173,9 +173,40 @@
       <button onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
     </div>
   </div>
-
   <script>
-  
+    // Função para salvar valores no localStorage
+    function salvarValores(valor, saldo) {
+        localStorage.setItem('valor', valor);
+        localStorage.setItem('saldo', saldo);
+    }
+
+    // Função para carregar valores do localStorage
+    function carregarValores() {
+        const valor = localStorage.getItem('valor');
+        const saldo = localStorage.getItem('saldo');
+        if (valor !== null) document.getElementById('valorInput').value = valor;
+        if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
+    }
+
+    // Carregar valores ao iniciar
+    window.onload = carregarValores;
+
+    // Adicione esta função para enviar os valores para o outro site
+    function enviarValores() {
+        const valor = localStorage.getItem('valor');
+        const saldo = localStorage.getItem('saldo');
+        if (valor && saldo) {
+            const payload = { valor, saldo };
+            window.parent.postMessage(payload, "*");
+        }
+    }
+
+    // Adicione um listener para a mensagem do iframe
+    window.addEventListener("message", (event) => {
+        if (event.data === "getValores") {
+            enviarValores();
+        }
+    });
     let timeEscolhido = null;
 
      // Função para salvar valores no localStorage
@@ -317,29 +348,6 @@
     //localStorage.clear();
     //localStorage.removeItem('valorSaldo');
 
- // Adicione esta função para enviar os valores para o outro site
-    function enviarValores() {
-        const valor = localStorage.getItem('valor');
-        const saldo = localStorage.getItem('saldo');
-        if (valor && saldo) {
-            const payload = { valor, saldo };
-            window.parent.postMessage(payload, "*");
-        }
-    }
-
-    // Adicione um listener para a mensagem do iframe
-    window.addEventListener("message", (event) => {
-        if (event.data === "getValores") {
-            enviarValores();
-        }
-    });
-
-    // Enviar valores para o outro site
-    window.onload = () => {
-        carregarValores();
-        enviarValores();
-    }
   </script>
 </body>
 </html>
- 
