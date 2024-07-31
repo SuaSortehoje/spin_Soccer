@@ -17,11 +17,17 @@
   <p>Valor: <span id="valor"></span></p>
   <p>Saldo: <span id="saldo"></span></p>
 
-  <iframe id="iframe" src="https://spinsoccer.netlify.app/spin_soccer_01" style="display:noe;"></iframe>
+  <iframe id="iframe" src="https://spinsoccer.netlify.app/spin_soccer_01" style="display:none;"></iframe>
 
   <script>
+    // Enviar mensagem para o iframe pedindo os valores
+    document.getElementById("iframe").onload = function() {
+        this.contentWindow.postMessage("getValores", "https://spinsoccer.netlify.app");
+    };
+
+    // Ouvir a resposta do iframe
     window.addEventListener("message", function(event) {
-        if (event.origin !== "https://spinsoccer.netlify.app/spin_soccer_01") {
+        if (event.origin !== "https://spinsoccer.netlify.app") {
             return; // Segurança: só aceita mensagens da origem correta
         }
         const { valor, saldo } = event.data;
