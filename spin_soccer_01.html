@@ -215,7 +215,7 @@
         }
 
         if (isNaN(valor) || valor < 1) {
-            alert("Por favor, insira um valor válido maior ou igual a 50.");
+            alert("Por favor, insira um valor válido maior ou igual a 10.");
             return;
         }
 
@@ -248,10 +248,10 @@
                 if (Math.abs(grausAtuais - grausFinal) < grausPorSeg) { // Verifica se a rotação está dentro da margem aceitável
                       if (randomTime === timeEscolhido) {
                         alert("Você ganhou!");
-                        saldo += 70;
+                        saldo += 350;
                     } else {
                         alert("Você perdeu! O ponteiro parou no time " + randomTime);
-                        valor -= 5;
+                        valor -= 2;
                         if (saldo >= 35) {
                             saldo -= 35;
                         }
