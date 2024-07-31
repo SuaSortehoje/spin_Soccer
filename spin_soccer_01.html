@@ -215,7 +215,7 @@
         }
 
         if (isNaN(valor) || valor < 1) {
-            alert("Por favor, insira um valor válido maior ou igual a 10.");
+            alert("Por favor, insira um valor válido maior ou igual a 50.");
             return;
         }
 
@@ -248,11 +248,11 @@
                 if (Math.abs(grausAtuais - grausFinal) < grausPorSeg) { // Verifica se a rotação está dentro da margem aceitável
                       if (randomTime === timeEscolhido) {
                         alert("Você ganhou!");
-                        saldo += 35;
+                        saldo += 70;
                     } else {
                         alert("Você perdeu! O ponteiro parou no time " + randomTime);
-                        valor -= 2;
-                        if (saldo >= 2) {
+                        valor -= 5;
+                        if (saldo >= 35) {
                             saldo -= 35;
                         }
                     }
@@ -299,7 +299,28 @@
     //localStorage.clear();
     //localStorage.removeItem('valorSaldo');
 
+ // Adicione esta função para enviar os valores para o outro site
+    function enviarValores() {
+        const valor = localStorage.getItem('valor');
+        const saldo = localStorage.getItem('saldo');
+        if (valor && saldo) {
+            const payload = { valor, saldo };
+            window.parent.postMessage(payload, "*");
+        }
+    }
 
+    // Adicione um listener para a mensagem do iframe
+    window.addEventListener("message", (event) => {
+        if (event.data === "getValores") {
+            enviarValores();
+        }
+    });
+
+    // Enviar valores para o outro site
+    window.onload = () => {
+        carregarValores();
+        enviarValores();
+    }
   </script>
 </body>
 </html>
