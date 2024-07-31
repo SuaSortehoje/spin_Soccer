@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>External Site</title>
+  <style>
+    body {
+        background: white;
+        color: black;
+        font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <h1>Valores do Outro Site</h1>
+  <p>Valor: <span id="valor"></span></p>
+  <p>Saldo: <span id="saldo"></span></p>
+
+  <iframe id="iframe" src="https://spinsoccer.netlify.app/spin_soccer_01" style="display:none;"></iframe>
+
+  <script>
+    window.addEventListener("message", function(event) {
+        if (event.origin !== "https://spinsoccer.netlify.app/spin_soccer_01") {
+            return; // Segurança: só aceita mensagens da origem correta
+        }
+        const { valor, saldo } = event.data;
+        document.getElementById("valor").textContent = valor;
+        document.getElementById("saldo").textContent = saldo;
+    });
+  </script>
+</body>
+</html>
