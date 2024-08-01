@@ -617,6 +617,51 @@ function ajustarValor(operacao) {
     // Salva os novos valores no localStorage
     salvarValores(valor.toFixed(2), saldo.toFixed(2));
 }
+// Função para salvar valores no localStorage
+function salvarValores() {
+    const valor = document.getElementById('valorInput').value;
+    const saldo = document.getElementById('valorSaldo').value;
+    const aposta = document.getElementById('apostaInput').value;
+
+    localStorage.setItem('valor', valor);
+    localStorage.setItem('saldo', saldo);
+    localStorage.setItem('aposta', aposta);
+}
+
+// Função para carregar valores do localStorage
+function carregarValores() {
+    const valor = localStorage.getItem('valor');
+    const saldo = localStorage.getItem('saldo');
+    const aposta = localStorage.getItem('aposta');
+
+    if (valor !== null) document.getElementById('valorInput').value = valor;
+    if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
+    if (aposta !== null) document.getElementById('apostaInput').value = aposta;
+
+    const saldoFloat = parseFloat(saldo);
+    const depositoBtn = document.querySelector('.btnButton');
+    if (isNaN(saldoFloat) || saldoFloat === 0) {
+        depositoBtn.classList.add('blink');
+    } else {
+        depositoBtn.classList.remove('blink');
+    }
+}
+
+// Salvar valores ao realizar ações específicas
+function atualizarValores() {
+    salvarValores();
+}
+
+// Carregar valores ao iniciar
+window.onload = carregarValores;
+
+// Exemplo de como salvar valores ao clicar em um botão (você pode chamar essa função onde for necessário)
+document.querySelector('.someButton').addEventListener('click', atualizarValores);
+
+// Exemplo de como salvar valores ao modificar os inputs (você pode adicionar isso aos eventos de input/blur dos inputs)
+document.getElementById('valorInput').addEventListener('input', salvarValores);
+document.getElementById('valorSaldo').addEventListener('input', salvarValores);
+document.getElementById('apostaInput').addEventListener('input', salvarValores);
 
  //localStorage.clear();
     //localStorage.removeItem('valorSaldo');
