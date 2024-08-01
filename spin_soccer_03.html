@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<canvas id="receiptCanvas" style="display:none;"></canvas>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link rel="icon" href="https://raw.githubusercontent.com/SuaSortehoje/placarBet/main/relogioTime.jpeg" type="image/jpeg">
+  <title>spin soccer</title>
+<style>
+    body {
+     background-image: url("https://raw.githubusercontent.com/SuaSortehoje/placarBet/main/images%20(12).jpeg");
+    background-size: cover;
+    width:100%;
+    height:500px;
+    }
+    .bahia, .vitoria, .gremio, .cruzeiro, .flamengo, .palmeiras {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 1px solid red;
+    }
+    .bahia { margin-left: 2%; margin-top: 20%; }
+    .vitoria { margin-left: 40%; margin-top: 5px; }
+    .gremio { margin-left: 78%; margin-top: 70px; }
+    .círculo {
+      position: relative;
+      width: 255px;
+      height: 260px;
+      border-radius: 50%;
+      margin-left: 45px;
+      margin-top: 20%;
+      background-image: url("https://raw.githubusercontent.com/SuaSortehoje/placarBet/main/relogioTime.jpeg");
+      
+      outline: none;
+      border: 1px solid red;
+    }
+    .ponteiro {
+      background: white;
+      position: absolute;
+      border-radius: 10px;
+      border: 1px solid black;
+      width: 100px;
+      height: 10px;
+      margin-left: 50%;
+      margin-top: 49%;
+      transform-origin: left center;
+      transform: rotate(0deg); /* Ponteiro começa apontando para cima */
+    }
+    .cruzeiro { margin-top: -15%; }
+    .flamengo { margin-left: 40%; margin-top: 1%; }
+    .palmeiras { margin-top: -15%; margin-left: 80%; }
+    .btn { margin-bottom: 10%; margin-top: 20%; }
+    .inicia {
+      width: 40%;
+      height: 30px;
+      background: #00ff00;
+      border-radius: 10px;
+      margin-top: 2%;
+      margin-left: 0%;
+    }
+    .dps { width: 40%; height: 30px; background: #00ff00; border-radius: 10px; margin-top: 10%; margin-left: 35%; }
+    .escolhar { margin-top: 80px; margin-left: 5px; }
+    .imgEscolhar {
+      border-radius: 10px;
+      border: 1px solid red;
+      width: 45px;
+      height: 50px;
+      margin: 1px;
+      cursor: pointer;
+    }
+    .selected { border: 2px solid green; }
+    .time { opacity: 0.7; }
+    .time.selected { opacity: 1; }
+    .valorInput { width:20%; margin-left:10%; }
+    .valorSaldo { position: absolute; width: 12%; text-align: center; border-radius: 10px; margin-top:-30px; margin-left:60px; }
+    .btnButton { width: 20%; border-radius: 10px; text-align: center; margin-left: 10%; }
+    .btnButton1 { width: 20%; border-radius: 10px; text-align: center; margin-left: 10%; }
+    .saqueButton { width: 20%; border-radius: 10px; text-align: center; cursor: pointer; }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 10px;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover, .close:focus { color: black; text-decoration: none; cursor: pointer; }
+    #enviar { display: none; }
+    .labelEnviar {
+      display: flex;
+      flex-direction: row;
+      color: white;
+      background: green;
+      border-radius: 10px;
+      border: 1px solid green;
+      margin-left: 20%;
+      width: 50%;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+    }
+    @keyframes blink {
+      0% { opacity: 1; }
+      10% { background: blue; }
+      11% { background: white; }
+      50% { opacity: 0; }
+      55% { background: green; }
+      51% { background: black; }
+      100% { opacity: 1; }
+    }
+    .blink { animation: blink 1s infinite; }
+    .addSaldoButton { margin: 8px; background: pink; margin-left: 155px; border-radius: 10px; text-align: center; cursor: pointer; }
+    .apostaInput { position: absolute; width: 12%; border-radius: 10px; text-align: center; margin-top: -30px; }
+    .ajuste { position: relative; height: 30px; border-radius: 10px; }
+    .ajusteMenos { margin-left: 20px; height: 30px; border-radius: 10px; }
+    .valorInput{height:20px; background:black;color:white;text-align:center;border-radius:12px;}
+  </style>
+</head>
+<body>
+  <div class="circular">
+    <div>
+    <a href="demo.html">
+ <button class="btnButton1">DEMO</button></a>    
+    
+    <input class="valorInput" id="valorInput" value="0" readonly>
+          <a href="https://multijogo.github.io/Link-de-pagamento-pix/">
+      <button class="btnButton">DEPOSITO</button></a>    
+   <button class="addSaldoButton" onclick="adicionarSaldo()">transferi☞☜</button>
+      <button class="saqueButton" onclick="mostrarModal()">SAQUE</button>
+        <br>
+      
+    <div>
+           <input class="apostaInput" id="apostaInput" value="10" readonly>
+       
+      <input class="valorSaldo" id="valorSaldo" value="0" readonly>
+   </div>
+    </div>
+    <div>
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/2.jpeg" class="bahia time" data-time="bahia">
+    </div>
+    <div>
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/36.jpeg" class="vitoria time" data-time="vitoria">
+    </div>
+    <div>
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/4.jpeg" class="gremio time" data-time="gremio">
+    </div>
+    <div class="círculo">
+      <div class="ponteiro" id="ponteiro"></div>
+    </div>
+    <div class="escolharTime">
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/6.jpeg" class="cruzeiro time" data-time="cruzeiro">
+    </div>
+ 
+    <div>
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/9.jpeg" class="flamengo time" data-time="flamengo">
+    </div>
+    
+    
+    <div>
+      <img src="https://raw.githubusercontent.com/Savanty/Time-/main/15.jpeg" class="palmeiras time" data-time="palmeiras">
+      
+    </div>
+
+ 
+  <div class="btn">
+   <input class="ajusteMenos" id="ajusteMenos" type="button" value="diminuir +1" onclick="ajustarValor('-')">
+    <button class="inicia" onclick="iniciar()">Iniciar</button>
+           <input class="ajuste" id="ajusteMais" type="button" value="adicionar -1" onclick="ajustarValor('+')">
+  </div>
+
+  <!-- Modal -->
+  <div id="modalSaque" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="fecharModal()">&times;</span>
+      <h2>Saque</h2>
+      <p>Saldo acumulado: <span id="saldoModal"></span></p>
+      <p>Nome: <input type="text" id="nome" placeholder="Seu nome"></p>
+      <p>PIX: <input type="text" id="pix" placeholder="Chave PIX"></p>
+ 
+      <input id="enviar" type="file"><br />
+   <button onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
+
+    </div>
+  </div>
+  <script>
+    // Função para salvar valores no localStorage
+    function salvarValores(valor, saldo) {
+        localStorage.setItem('valor', valor);
+        localStorage.setItem('saldo', saldo);
+    }
+
+    // Função para carregar valores do localStorage
+    function carregarValores() {
+        const valor = localStorage.getItem('valor');
+        const saldo = localStorage.getItem('saldo');
+        if (valor !== null) document.getElementById('valorInput').value = valor;
+        if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
+    }
+
+    // Carregar valores ao iniciar
+    window.onload = carregarValores;
+
+    // Adicione esta função para enviar os valores para o outro site
+    function enviarValores() {
+        const valor = localStorage.getItem('valor');
+        const saldo = localStorage.getItem('saldo');
+        if (valor && saldo) {
+            const payload = { valor, saldo };
+            window.parent.postMessage(payload, "*");
+        }
+    }
+
+    // Adicione um listener para a mensagem do iframe
+    window.addEventListener("message", (event) => {
+        if (event.data === "getValores") {
+            enviarValores();
+        }
+    });
+    let timeEscolhido = null;
+
+     // Função para salvar valores no localStorage
+    function salvarValores(valor, saldo) {
+        localStorage.setItem('valor', valor);
+        localStorage.setItem('saldo', saldo);
+    }
+
+    // Função para carregar valores do localStorage
+    function carregarValores() {
+        const valor = localStorage.getItem('valor');
+        const saldo = localStorage.getItem('saldo');
+        if (valor !== null) document.getElementById('valorInput').value = valor;
+        if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
+    }
+
+    // Carregar valores ao iniciar
+    window.onload = carregarValores;
+
+    // Adicione esta função para enviar os valores para o outro site
+    function enviarValores() {
+        const valor = localStorage.getItem('valor');
+        const saldo = localStorage.getItem('saldo');
+        if (valor && saldo) {
+            const payload = { valor, saldo };
+            window.parent.postMessage(payload, "*");
+        }
+    }
+
+    // Adicione um listener para a mensagem do iframe
+    window.addEventListener("message", (event) => {
+        if (event.data === "getValores") {
+            enviarValores();
+        }
+    });
+
+
+    document.querySelectorAll('.time').forEach(el => {
+        el.addEventListener('click', function() {
+            document.querySelectorAll('.time').forEach(img => img.classList.remove('selected'));
+            this.classList.add('selected');
+            timeEscolhido = this.getAttribute('data-time');
+        });
+    });
+
+    function carregarValores() {
+    const valor = localStorage.getItem('valor');
+    const saldo = localStorage.getItem('saldo');
+    if (valor !== null) document.getElementById('valorInput').value = valor;
+    if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
+
+    const saldoFloat = parseFloat(saldo);
+    const depositoBtn = document.querySelector('.btnButton');
+    if (isNaN(saldoFloat) || saldoFloat === 0) {
+        depositoBtn.classList.add('blink');
+    } else {
+        depositoBtn.classList.remove('blink');
+    }
+}
+
+function iniciar() {
+    const valorInput = document.getElementById("valorInput");
+    const valorSaldo = document.getElementById("valorSaldo");
+    let valor = parseFloat(valorInput.value);
+    let saldo = parseFloat(valorSaldo.value);
+
+    if (!timeEscolhido) {
+        alert("Por favor, escolha um time antes de iniciar.");
+        return;
+    }
+
+    if (isNaN(valor) || valor < 1) {
+        alert("Por favor, insira um valor válido maior ou igual a 10.");
+        return;
+    }
+
+    const ponteiro = document.getElementById("ponteiro");
+    const grausPorSeg = 15;
+    const tempoGiro = 5; // tempo em segundos
+    const voltas = 3; // Ajuste o número de voltas conforme necessário
+    const grausTotais = 360 * voltas; // Número de voltas * 360 graus
+
+    const grausPorTime = {
+        "bahia": 395,  // Ajuste conforme necessário
+        "vitoria": 460,
+        "gremio": 515,
+        "cruzeiro": 335,
+        "flamengo": 280,
+        "palmeiras": 224,
+    };
+
+    const times = Object.keys(grausPorTime);
+    const randomTime = times[Math.floor(Math.random() * times.length)];
+    const grausParada = grausPorTime[randomTime];
+    const grausFinal = grausTotais + grausParada - 90; // Ajusta para compensar a rotação inicial
+
+    let grausAtuais = 0;
+    let giro = setInterval(() => {
+        grausAtuais += grausPorSeg;
+        if (grausAtuais >= grausFinal) {
+            clearInterval(giro);
+            if (Math.abs(grausAtuais - grausFinal) < grausPorSeg) { // Verifica se a rotação está dentro da margem aceitável
+                if (randomTime === timeEscolhido) {
+                    alert("Você ganhou!");
+                    saldo += 20;
+                } else {
+                    alert("Você perdeu! O ponteiro parou no time " + randomTime);
+                    valor -= 2;
+                    if (saldo >= 2) {
+                        saldo -= 2;
+                    }
+                }
+
+                valorInput.value = valor.toFixed(2); // Formata o valor com 2 casas decimais
+                valorSaldo.value = saldo.toFixed(2); // Formata o saldo com 2 casas decimais
+
+                // Salva os valores no localStorage
+                salvarValores(valor.toFixed(2), saldo.toFixed(2));
+
+                // Atualiza o estado do botão de depósito
+                const depositoBtn = document.querySelector('.btnButton');
+                if (saldo === 0) {
+                    depositoBtn.classList.add('blink');
+                } else {
+                    depositoBtn.classList.remove('blink');
+                }
+            }
+        }
+        ponteiro.style.transform = `rotate(${grausAtuais % 360 - 90}deg)`; // Ajusta para começar invertido
+    }, 1000 / 60); // Atualiza 60 vezes por segundo
+}
+
+    function mostrarModal() {
+    const saldo = parseFloat(document.getElementById("valorSaldo").value);
+    if (saldo === 0) {
+        alert("Saldo insuficiente para realizar o saque.");
+        return;
+    }
+    document.getElementById("saldoModal").innerText = saldo.toFixed(2);
+    document.getElementById("modalSaque").style.display = "block";
+}
+
+
+    function fecharModal() {
+        document.getElementById("modalSaque").style.display = "none";
+    }
+
+    function enviarWhatsApp() {
+    const saldo = parseFloat(document.getElementById("valorSaldo").value);
+    const valor = parseFloat(document.getElementById("valorInput").value);
+    const nome = document.getElementById("nome").value;
+    const pix = document.getElementById("pix").value;
+
+    if (!nome || !pix) {
+        alert("Por favor, preencha seu nome e chave PIX.");
+        return;
+    }
+
+    // Gerar e baixar o comprovante
+    gerarComprovante(nome, pix, saldo);
+
+    // Enviar a mensagem via WhatsApp
+    const mensagem = `Saque solicitado:\n\nNome: ${nome}\nPIX: ${pix}\nSaldo solicitado: R$${saldo}\nValor Disponível: R$${valor}`;
+    const url = `https://wa.me/5571992290058?text=${encodeURIComponent(mensagem)}`;
+    window.open(url, '_blank');
+
+    // Atualizar o saldo e valor após a geração do comprovante e abertura do WhatsApp
+    document.getElementById("valorSaldo").value = "0.00";
+    localStorage.setItem('saldo', "0.00"); // Zera o saldo no localStorage
+}
+
+
+  function mostrarModal() {
+    const saldo = parseFloat(document.getElementById("valorSaldo").value);
+    if (saldo === 0) {
+        alert("Saldo insuficiente para realizar o saque.");
+        return;
+    }
+    document.getElementById("saldoModal").innerText = saldo.toFixed(2);
+    document.getElementById("modalSaque").style.display = "block";
+}
+
+function fecharModal() {
+    document.getElementById("modalSaque").style.display = "none";
+}
+
+function gerarComprovante(nome, pix, saldo) {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    // Configurações do canvas
+    canvas.width = 500;
+    canvas.height = 300;
+
+    // Gera uma cor de fundo aleatória
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    const backgroundColor = getRandomColor();
+
+    // Preencher fundo com cor aleatória
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Adicionar texto
+    ctx.fillStyle = "#000";
+    ctx.font = "16px Arial";
+    ctx.fillText("SOLICITACAO de SAQUE", 100, 30);
+    ctx.fillText(`Nome: ${nome}`, 10, 60);
+    ctx.fillText(`PIX: ${pix}`, 10, 90);
+    ctx.fillText(`Saldo solicitado: R$${saldo}`, 10, 120);
+
+    // Adicionar valor solicitado
+    ctx.fillText(`Valor Disponivel : R$${parseFloat(document.getElementById("valorInput").value).toFixed(2)}`, 10, 150);
+
+    // Adicionar data e hora
+    const now = new Date();
+    ctx.fillText(`Data: ${now.toLocaleDateString()}`, 10, 180);
+    ctx.fillText(`Hora: ${now.toLocaleTimeString()}`, 10, 210);
+
+    // Adicionar marca d'água
+    ctx.save();
+    ctx.globalAlpha = 0.3; // Define a transparência da marca d'água
+    ctx.font = "bold 120px Arial";
+    ctx.fillStyle = "white"; // Cor da marca d'água
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate(-Math.PI / 0); // Rotaciona a marca d'água
+    ctx.fillText("SPIN SOCCER", 2, 0);
+    
+    ctx.restore();
+
+    // Criar link para download
+    const link = document.createElement("a");
+    link.download = `comprovante_${now.getTime()}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+}
+function carregarValores() {
+    const valor = localStorage.getItem('valor');
+    const saldo = localStorage.getItem('saldo');
+    if (valor !== null) document.getElementById('valorInput').value = valor;
+    if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
+
+    const saldoFloat = parseFloat(saldo);
+    if (isNaN(saldoFloat) || saldoFloat === 0) {
+        document.querySelector('.btnButton').classList.add('blink');
+    } else {
+        document.querySelector('.btnButton').classList.remove('blink');
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    carregarValores(); // Carregar valores ao iniciar
+
+    // Adiciona o listener para o botão de adicionar saldo
+    document.querySelector('.addSaldoButton').addEventListener('click', adicionarSaldo);
+
+    // Adiciona o listener para o botão de girar ponteiro
+    document.querySelector('.spinButton').addEventListener('click', girarPonteiro);
+});
+
+function salvarValores(valor, saldo) {
+    localStorage.setItem('valor', valor);
+    localStorage.setItem('saldo', saldo);
+}
+
+function carregarValores() {
+    const valor = localStorage.getItem('valor');
+    const saldo = localStorage.getItem('saldo');
+    if (valor !== null) document.getElementById('valorInput').value = valor;
+    if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
+}
+
+function adicionarSaldo() {
+    const apostaInput = document.getElementById('apostaInput');
+    const valorSaldo = document.getElementById('valorSaldo');
+    
+    let valor = parseFloat(apostaInput.value) || 0;
+    let saldo = parseFloat(valorSaldo.value) || 0;
+    
+    if (isNaN(valor) || isNaN(saldo)) {
+        alert("Valores inválidos.");
+        return;
+    }
+
+    // Adiciona o saldo ao valor
+    valor += saldo;
+    saldo = 0; // Zera o saldo após a transferência
+
+    // Atualiza os campos de valor e saldo
+    apostaInput.value = valor.toFixed(2);
+    valorSaldo.value = saldo.toFixed(2);
+
+    // Salva os novos valores no localStorage
+    salvarValores(valor.toFixed(2), saldo.toFixed(2));
+
+    // Atualiza o estado do botão de depósito
+    const depositoBtn = document.querySelector('.btnButton');
+    if (valor === 0) {
+        depositoBtn.classList.add('blink');
+    } else {
+        depositoBtn.classList.remove('blink');
+    }
+}
+
+function girarPonteiro() {
+    const apostaInput = document.getElementById('apostaInput');
+    const valorInput = document.getElementById('valorInput');
+    
+    let aposta = parseFloat(apostaInput.value) || 0;
+    let valor = parseFloat(valorInput.value) || 0;
+
+    // Verifica se o valor de aposta é válido e maior que zero
+    if (isNaN(aposta) || aposta <= 0) {
+        alert('Insira um valor válido para apostar.');
+        return;
+    }
+
+    // Verifica se há saldo suficiente para a aposta
+    if (aposta > valor) {
+        alert('Saldo insuficiente para a aposta.');
+        return;
+    }
+
+    // Lógica para girar o ponteiro (substitua com o código real para girar o ponteiro)
+    console.log('Girando o ponteiro com aposta:', aposta);
+
+    // Multiplica o valor por 20
+    valor *= 20;
+    
+    // Atualiza o campo valorInput
+    valorInput.value = valor.toFixed(2);
+
+    // Zera o campo apostaInput
+    apostaInput.value = '';
+
+    // Zera o saldo após a aposta
+    valorInput.value = 0;
+
+    // Salva os novos valores no localStorage
+    salvarValores(valor.toFixed(2), 0);
+}
+
+// Função para ajustar o valor do input
+function ajustarValor(operacao) {
+    const apostaInput = document.getElementById('apostaInput');
+    const valorInput = document.getElementById('valorInput');
+    let aposta = parseFloat(apostaInput.value) || 0;
+    let valor = parseFloat(valorInput.value) || 0;
+    
+    if (operacao === '+') {
+        if (valor >= 2) {
+            aposta += 2;
+            valor -= 2;
+        } else {
+            alert('Saldo insuficiente para adicionar à aposta.');
+            return;
+        }
+    } else if (operacao === '-' && aposta >= 2) {
+        aposta -= 2;
+        valor += 2;
+    } else {
+        alert('Não é possível subtrair 2 reais.');
+        return;
+    }
+    
+    apostaInput.value = aposta.toFixed(2);
+    valorInput.value = valor.toFixed(2);
+
+    // Salva os novos valores no localStorage
+    salvarValores(valor.toFixed(2), saldo.toFixed(2));
+}
+
+ //localStorage.clear();
+    //localStorage.removeItem('valorSaldo');
+
+  </script>
+</body>
+</html>
