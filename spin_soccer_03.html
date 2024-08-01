@@ -238,64 +238,191 @@
     });
     let timeEscolhido = null;
 
-     // Função para salvar valores no localStorage
-    function salvarValores(valor, saldo) {
+   function salvarValores(valor, saldo, aposta) {
         localStorage.setItem('valor', valor);
         localStorage.setItem('saldo', saldo);
-    }
+        localStorage.setItem('aposta', aposta);
+      }
 
-    // Função para carregar valores do localStorage
-    function carregarValores() {
+      function carregarValores() {
         const valor = localStorage.getItem('valor');
         const saldo = localStorage.getItem('saldo');
+        const aposta = localStorage.getItem('aposta');
         if (valor !== null) document.getElementById('valorInput').value = valor;
         if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
-    }
+        if (aposta !== null) document.getElementById('apostaInput').value = aposta;
 
-    // Carregar valores ao iniciar
-    window.onload = carregarValores;
+        const saldoFloat = parseFloat(saldo);
+        const depositoBtn = document.querySelector('.btnButton');
+        if (isNaN(saldoFloat) || saldoFloat === 0) {
+          depositoBtn.classList.add('blink');
+        } else {
+          depositoBtn.classList.remove('blink');
+        }
+      }
 
-    // Adicione esta função para enviar os valores para o outro site
-    function enviarValores() {
+      window.onload = carregarValores;
+
+      function enviarValores() {
         const valor = localStorage.getItem('valor');
         const saldo = localStorage.getItem('saldo');
-        if (valor && saldo) {
-            const payload = { valor, saldo };
-            window.parent.postMessage(payload, "*");
+        const aposta = localStorage.getItem('aposta');
+        if (valor && saldo && aposta) {
+          const payload = { valor, saldo, aposta };
+          window.parent.postMessage(payload, "*");
         }
-    }
+      }
 
-    // Adicione um listener para a mensagem do iframe
-    window.addEventListener("message", (event) => {
+      window.addEventListener("message", (event) => {
         if (event.data === "getValores") {
-            enviarValores();
+          enviarValores();
         }
-    });
+      });
 
-
-    document.querySelectorAll('.time').forEach(el => {
+      document.querySelectorAll('.time').forEach(el => {
         el.addEventListener('click', function() {
-            document.querySelectorAll('.time').forEach(img => img.classList.remove('selected'));
-            this.classList.add('selected');
-            timeEscolhido = this.getAttribute('data-time');
+          document.querySelectorAll('.time').forEach(img => img.classList.remove('selected'));
+          this.classList.add('selected');
+          timeEscolhido = this.getAttribute('data-time');
         });
-    });
+      });
 
-    function carregarValores() {
-    const valor = localStorage.getItem('valor');
-    const saldo = localStorage.getItem('saldo');
-    if (valor !== null) document.getElementById('valorInput').value = valor;
-    if (saldo !== null) document.getElementById('valorSaldo').value = saldo;
+      function iniciar() {
+        const valorInput = document.getElementById("valorInput");
+        const valorSaldo = document.getElementById("valorSaldo");
+        const apostaInput = document.getElementById("apostaInput");
+        let valor = parseFloat(valorInput.value);
+        let saldo = parseFloat(valorSaldo.value);
+        let aposta = parseFloat(apostaInput.value);
 
-    const saldoFloat = parseFloat(saldo);
-    const depositoBtn = document.querySelector('.btnButton');
-    if (isNaN(saldoFloat) || saldoFloat === 0) {
-        depositoBtn.classList.add('blink');
-    } else {
-        depositoBtn.classList.remove('blink');
-    }
-}
+        if (!timeEscolhido) {
+          alert("Por favor, escolha um time antes de iniciar.");
+          return;
+        }
 
+        if (isNaN(valor) || valor < 1) {
+          alert("Por favor, insira um valor válido maior ou igual a 10.");
+          return;
+        }
+
+        const ponteiro = document.getElementById("ponteiro");
+        const grausPorSeg = 15;
+        const tempoGiro = 5; // tempo em segundos
+        const voltas = 3; // Ajuste o número de voltas conforme necessário
+        const grausTotais = 360 * voltas; // Número de voltas * 360 graus
+
+        const grausPorTime = {
+          "bahia": 395,  // Ajuste conforme necessário
+          "vitoria": 460,
+          "gremio": 515,
+          "cruzeiro": 335,
+          "flamengo": 280,
+          "palmeiras": 224,
+        };
+
+        const times = Object.keys(grausPorTime);
+        const randomTime = times[Math.floor(Math.random() * times.length)];
+        const grausParada = grausPorTime[randomTime];
+        const grausFinal = grausTotais + grausParada - 90; // Ajusta para compensar a rotação inicial
+
+        let grausAtuais = 0;
+        let giro = setInterval(() => {
+          grausAtuais += grausPorSeg;
+          if (grausAtuais >= grausFinal) {
+            clearInterval(giro);
+            if (Math.abs(grausAtuais - grausFinal) < grausPorSeg) {
+              if (randomTime === timeEscolhido) {
+                alert("Você ganhou!");
+                saldo += 20;
+              } else {
+                alert("Você perdeu! O ponteiro parou no time " + randomTime);
+                valor -= 2;
+                if (saldo >= 2) {
+                  saldo -= 2;
+                }
+              }
+
+              valorInput.value = valor.toFixed(2); // Formata o valor com 2 casas decimais
+              valorSaldo.value = saldo.toFixed(2); // Formata o saldo com 2 casas decimais
+              apostaInput.value = aposta.toFixed(2); // Formata a aposta com 2 casas decimais
+
+              // Salva os valores no localStorage
+              salvarValores(valor.toFixed(2), saldo.toFixed(2), aposta.toFixed(2));
+
+              // Atualiza o estado do botão de depósito
+              const depositoBtn = document.querySelector('.btnButton');
+              if (saldo === 0) {
+                depositoBtn.classList.add('blink');
+              } else {
+                depositoBtn.classList.remove('blink');
+              }
+            }
+          }
+          ponteiro.style.transform = `rotate(${grausAtuais % 360 - 90}deg)`; // Ajusta para começar invertido
+        }, 1000 / 60); // Atualiza 60 vezes por segundo
+      }
+
+      function mostrarModal() {
+        const saldo = parseFloat(document.getElementById("valorSaldo").value);
+        if (saldo === 0) {
+          alert("Saldo insuficiente para realizar o saque.");
+          return;
+        }
+        document.getElementById("saldoModal").textContent = saldo.toFixed(2);
+        document.getElementById("modalSaque").style.display = "block";
+      }
+
+      function fecharModal() {
+        document.getElementById("modalSaque").style.display = "none";
+      }
+
+      function enviarWhatsApp() {
+        const nome = document.getElementById("nome").value;
+        const pix = document.getElementById("pix").value;
+        const saldo = document.getElementById("saldoModal").textContent;
+        const imagem = document.getElementById("enviar").files[0];
+        const linkWhatsApp = `https://api.whatsapp.com/send?phone=+5511977846466&text=Nome: ${encodeURIComponent(nome)},%0AChave PIX: ${encodeURIComponent(pix)},%0ASaldo: ${saldo}`;
+        if (imagem) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const base64Image = e.target.result;
+            const linkWhatsAppComImagem = `${linkWhatsApp},%0AImagem: ${encodeURIComponent(base64Image)}`;
+            window.open(linkWhatsAppComImagem, '_blank');
+          };
+          reader.readAsDataURL(imagem);
+        } else {
+          window.open(linkWhatsApp, '_blank');
+        }
+      }
+
+      function ajustarValor(tipo) {
+        const valorInput = document.getElementById("valorInput");
+        let valor = parseFloat(valorInput.value);
+
+        if (tipo === '+') {
+          valor += 10;
+        } else if (tipo === '-') {
+          valor = Math.max(0, valor - 10);
+        }
+
+        valorInput.value = valor.toFixed(2); // Formata o valor com 2 casas decimais
+      }
+
+      function adicionarSaldo() {
+        const valorSaldo = document.getElementById("valorSaldo");
+        let saldo = parseFloat(valorSaldo.value);
+        saldo += 20;
+        valorSaldo.value = saldo.toFixed(2); // Formata o saldo com 2 casas decimais
+        salvarValores(parseFloat(document.getElementById("valorInput").value).toFixed(2), saldo.toFixed(2), parseFloat(document.getElementById("apostaInput").value).toFixed(2));
+
+        // Atualiza o estado do botão de depósito
+        const depositoBtn = document.querySelector('.btnButton');
+        if (saldo === 0) {
+          depositoBtn.classList.add('blink');
+        } else {
+          depositoBtn.classList.remove('blink');
+        }
+      }
 function iniciar() {
     const valorInput = document.getElementById("valorInput");
     const valorSaldo = document.getElementById("valorSaldo");
